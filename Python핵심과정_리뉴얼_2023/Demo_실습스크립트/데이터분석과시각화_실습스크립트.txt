@@ -1,0 +1,221 @@
+﻿#데이터분석과 시각화 스크립트
+import pandas as pd
+
+unames=['user_id', 'gender', 'age', 'occupation', 'zip']
+
+users = pd.read_table('c:\\work\\movies\\users.dat', sep='::', header=None, names=unames , engine='python')
+
+
+rnames = ['user_id', 'movie_id', 'rating', 'timestamp']
+
+ratings = pd.read_table('c:\\work\\movies\\ratings.dat', sep='::', header=None,names=rnames , engine='python')
+
+mnames=['movie_id', 'title', 'genres']
+
+movies=pd.read_table('c:\\work\\movies\\movies.dat', sep='::',header=None, names=mnames , engine='python')
+
+users[:3]
+Out[40]: 
+   user_id gender  age  occupation    zip
+0        1      F    1          10  48067
+1        2      M   56          16  70072
+2        3      M   25          15  55117
+
+ratings[:3]
+Out[41]: 
+   user_id  movie_id  rating  timestamp
+0        1      1193       5  978300760
+1        1       661       3  978302109
+2        1       914       3  978301968
+
+movies[:3]
+Out[42]: 
+   movie_id                    title                        genres
+0         1         Toy Story (1995)   Animation|Children's|Comedy
+1         2           Jumanji (1995)  Adventure|Children's|Fantasy
+2         3  Grumpier Old Men (1995)                Comedy|Romance
+
+
+data = pd.merge(pd.merge(ratings, users), movies)
+
+data.info()
+
+mean_ratings = data.pivot_table('rating', index='title', columns='gender', aggfunc='mean')
+
+mean_ratings[:5]
+Out[54]: 
+gender                                F         M
+title                                            
+$1,000,000 Duck (1971)         3.375000  2.761905
+'Night Mother (1986)           3.388889  3.352941
+'Til There Was You (1997)      2.675676  2.733333
+'burbs, The (1989)             2.793478  2.962085
+...And Justice for All (1979)  3.828571  3.689024
+
+ratings_by_title = data.groupby('title').size()
+
+ratings_by_title[:10]
+Out[56]: 
+title
+$1,000,000 Duck (1971)                37
+'Night Mother (1986)                  70
+'Til There Was You (1997)             52
+'burbs, The (1989)                   303
+...And Justice for All (1979)        199
+1-900 (1994)                           2
+10 Things I Hate About You (1999)    700
+101 Dalmatians (1961)                565
+101 Dalmatians (1996)                364
+12 Angry Men (1957)                  616
+dtype: int64
+
+active_titles = ratings_by_title.index[ratings_by_title >= 250]
+
+active_titles
+Out[58]: 
+Index([''burbs, The (1989)', '10 Things I Hate About You (1999)',
+       '101 Dalmatians (1961)', '101 Dalmatians (1996)', '12 Angry Men (1957)',
+       '13th Warrior, The (1999)', '2 Days in the Valley (1996)',
+       '20,000 Leagues Under the Sea (1954)', '2001: A Space Odyssey (1968)',
+       '2010 (1984)',
+       ...
+       'X-Men (2000)', 'Year of Living Dangerously (1982)',
+       'Yellow Submarine (1968)', 'You've Got Mail (1998)',
+       'Young Frankenstein (1974)', 'Young Guns (1988)',
+       'Young Guns II (1990)', 'Young Sherlock Holmes (1985)',
+       'Zero Effect (1998)', 'eXistenZ (1999)'],
+      dtype='object', name='title', length=1216)
+
+top_female_ratings = mean_ratings.sort_values(by='F', ascending=False)
+
+top_female_ratings[:10]
+Out[61]: 
+gender                                               F         M
+title                                                           
+Clean Slate (Coup de Torchon) (1981)               5.0  3.857143
+Ballad of Narayama, The (Narayama Bushiko) (1958)  5.0  3.428571
+Raw Deal (1948)                                    5.0  3.307692
+Bittersweet Motel (2000)                           5.0       NaN
+Skipped Parts (2000)                               5.0  4.000000
+Lamerica (1994)                                    5.0  4.666667
+Gambler, The (A J�t�kos) (1997)                    5.0  3.166667
+Brother, Can You Spare a Dime? (1975)              5.0  3.642857
+Ayn Rand: A Sense of Life (1997)                   5.0  4.000000
+24 7: Twenty Four Seven (1997)                     5.0  3.750000
+
+
+(신생아 이름 분석)
+import pandas as pd 
+import matplotlib.pyplot as plt 
+import numpy as np 
+%matplotlib inline
+
+names1880 = pd.read_csv('c:\work\yob1880.txt',names=['names','sex','births'])
+names1880
+
+names1880.groupby('sex').births.sum()
+
+
+years = range(1880, 2011)
+pieces = []
+columns = ['name','sex','births']
+for year in years:
+    path='c:\work\yob%d.txt' % year
+    frame=pd.read_csv(path, names=columns)
+    frame['year'] = year
+    pieces.append(frame)
+    names = pd.concat(pieces, ignore_index=True)
+
+names.info()
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 1690784 entries, 0 to 1690783
+Data columns (total 4 columns):
+name      1690784 non-null object
+sex       1690784 non-null object
+births    1690784 non-null int64
+year      1690784 non-null int64
+dtypes: int64(2), object(2)
+memory usage: 51.6+ MB
+
+names.head()
+
+names.tail()
+
+total_births = names.pivot_table('births', index='year', columns='sex', aggfunc=sum)
+
+total_births.tail()
+Out[82]: 
+sex         F        M
+year                  
+2006  1896468  2050234
+2007  1916888  2069242
+2008  1883645  2032310
+2009  1827643  1973359
+2010  1759010  1898382
+
+#한글처리에 필요한 코드 rc 셋팅을 미리 변경 
+import platform
+
+from matplotlib import font_manager, rc
+
+plt.rcParams['axes.unicode_minus'] = False 
+
+if platform.system() == 'Darwin':
+    rc('font', family='AppleGothic')
+elif platform.system() == 'Windows':
+    path = 'c:/Windows/Fonts/malgun.ttf'
+    font_name = font_manager.FontProperties(fname=path).get_name()
+    rc('font', family=font_name)
+else:
+    print('Unknown system')
+    
+
+total_births.plot(title='년도별 성별 출생숫자')
+
+
+def add_prop(group):
+    births = group.births.astype(float)
+    group['prop'] = births / births.sum()
+    return group
+
+
+names = names.groupby(['year','sex']).apply(add_prop)
+
+names
+
+np.allclose(names.groupby(['year', 'sex']).prop.sum(),1)
+Out[87]: True
+
+def get_top1000(group):
+    return group.sort_values(by='births', ascending=False)[:1000]
+
+
+grouped = names.groupby(['year', 'sex'])
+
+top1000 = grouped.apply(get_top1000)
+
+boys = top1000[top1000.sex == 'M']
+girls = top1000[top1000.sex == 'F']
+
+
+total_births = top1000.pivot_table('births', index='year', columns='name', aggfunc=sum)
+
+boys[:3]
+Out[93]: 
+                 name sex  births  year      prop
+year sex                                         
+1880 M   942     John   M    9655  1880  0.087381
+         943  William   M    9533  1880  0.086277
+         944    James   M    5927  1880  0.053641
+
+girls[:3]
+Out[94]: 
+            name sex  births  year      prop
+year sex                                    
+1880 F   0  Mary   F    7065  1880  0.077643
+         1  Anna   F    2604  1880  0.028618
+         2  Emma   F    2003  1880  0.022013
+
+subset = total_births[ ['John', 'William', 'James', 'Mary', 'Anna', 'Emma'] ]
+
+subset.plot(subplots=True, figsize=(12,10), grid=False, title='인기있는 남자아이, 여자아이의 이름 인기추세')

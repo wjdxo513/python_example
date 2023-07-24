@@ -1,0 +1,20 @@
+*값 형식(Value Type)
+Call By Value, Pass By Value 
+int x = 5; 
+int y = x; 
+stack
+------
+x(5)
+y(5)
+------
+
+*참조 형식(Reference Type)
+Call By Reference, Pass By Reference 
+stack		heap
+-----		-----
+demo --------------->새로운 객체 
+demoB-------------->
+-----		-----
+DemoClass demo = new DemoClass();
+DemoClass demoB = demo; 
+

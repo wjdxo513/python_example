@@ -1,0 +1,17 @@
+def capitalize_keys_values(d):
+    result = {}
+    for key, value in d.items():
+        upper_key = key.upper()
+        upper_value = value.upper()
+        result[upper_key] = upper_value
+    return result
+
+
+d
+Out[46]: {'one': 'aaa', 'three': 'ccc', 'two': 'bbb'}
+
+capitalize_keys(d)
+Out[47]: {'ONE': 'aaa', 'THREE': 'ccc', 'TWO': 'bbb'}
+
+capitalize_keys_values(d)
+Out[48]: {'ONE': 'AAA', 'THREE': 'CCC', 'TWO': 'BBB'}

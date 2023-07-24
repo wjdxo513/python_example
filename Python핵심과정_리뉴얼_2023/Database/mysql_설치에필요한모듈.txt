@@ -1,0 +1,2 @@
+# mysql 사용시 아래와 같이 설치한다. 
+pip install mysql-connector-python

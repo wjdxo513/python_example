@@ -1,0 +1,173 @@
+﻿import matplotlib.pyplot as plt 
+import numpy as np 
+%matplotlib inline
+
+plt.figure(figsize=(10,6))
+
+t = [0, 1, 2, 3, 4, 5, 6]
+y = [10, 20, 5, 10, 20, 30, 25]
+
+plt.figure(figsize=(10,6))
+plt.plot(t, y, color='green')
+
+plt.show()
+
+#linestyle을 dashed로 지정한 경우 
+plt.figure(figsize=(10,6))
+
+plt.plot(t, y, color='green', linestyle='dashed')
+
+plt.show()
+
+
+#이번에는 marker를 'o'로 지정하고 색깔과 크기를 지정한 경우 
+plt.figure(figsize=(10,6))
+
+plt.plot(t, y, color='blue', linestyle='dashed', marker='o', markerfacecolor='red', markersize=14)
+
+plt.show()
+
+
+#시간축(t)과 데이터축(y)을 생성해서 산포도로 출력 
+t = np.array([0,1,2,3,4,5,6,7,8,9])
+
+y = np.array([2,3,5,7,9,5,2,1,7,9])
+
+plt.figure(figsize=(10,6))
+
+plt.scatter(t,y)
+
+plt.show()
+
+
+#이번에는 marker를 '>'로 지정 
+plt.figure(figsize=(10,6))
+
+plt.scatter(t, y, marker='>')
+
+plt.show()
+
+
+#이번에는 컬러맵을 생성 
+colormap = t 
+
+plt.figure(figsize=(10,6))
+
+plt.scatter(t, y, s=50, c=colormap, marker='>')
+
+plt.colorbar()
+
+plt.show()
+
+
+#랜덤값을 3개 만들고 스캐일을 1, 0.5, 2로 주고 파장을 출력 
+s1 = np.random.normal(loc=0, scale=1, size=1000)
+s2 = np.random.normal(loc=5, scale=0.5, size=1000)
+s3 = np.random.normal(loc=10, scale=2, size=1000)
+
+plt.figure(figsize=(10,6))
+
+plt.plot(s1, label='s1')
+plt.plot(s2, label='s2')
+plt.plot(s3, label='s3')
+
+plt.legend()
+
+plt.show()
+
+
+#한글처리에 필요한 코드 rc 셋팅을 미리 변경 
+import platform
+
+from matplotlib import font_manager, rc
+
+plt.rcParams['axes.unicode_minus'] = False 
+
+if platform.system() == 'Darwin':
+    rc('font', family='AppleGothic')
+elif platform.system() == 'Windows':
+    path = 'c:/Windows/Fonts/malgun.ttf'
+    font_name = font_manager.FontProperties(fname=path).get_name()
+    rc('font', family=font_name)
+else:
+    print('Unknown system')
+
+
+#영화 데이터로 막대 그래프 출력 
+movies = ["애니홀", "벤허", "카사블랑카", "간디", "웨스트 사이드"]
+
+num_oscars = [5, 11, 3, 8, 10]
+
+plt.bar(movies, num_oscars)
+
+plt.ylabel("아카데미 상 숫자")
+plt.title("좋아하는 영화들")
+plt.show()
+
+
+#엑셀 파일 읽기
+import pandas as pd 
+dfExcel = pd.read_excel('c:\\work\\demo.xlsx', 'Sheet1')
+
+dfExcel
+
+
+#남녀별 판매금액 합계 
+var = dfExcel.groupby('성별').판매금액.sum()
+
+fig = plt.figure()
+
+ax1 = fig.add_subplot(1, 1, 1)
+
+ax1.set_xlabel('성별')
+
+ax1.set_ylabel('판매금액 합계')
+
+ax1.set_title('남녀별 판매금액 합계')
+
+var.plot(kind='bar')
+
+
+#눈금과 눈금간격, 범례를 지정하기 
+%matplotlib inline
+
+fig = plt.figure(figsize=(10,6))
+
+ax = fig.add_subplot(1, 1, 1)
+
+ax.plot(randn(1000).cumsum())
+
+ticks = ax.set_xticks([0, 250, 500, 750, 1000])
+
+labels = ax.set_xticklabels(['하나', '둘', '셋', '넷', '다섯'], rotation=30, fontsize='large')
+
+ax.set_title('데모 차트')
+
+ax.set_xlabel('단계')
+
+
+#groupby()메서드 사용 
+from pandas import Series, DataFrame
+
+df = DataFrame({'key1':['a','a','b','b','a'], 'key2':['one','two','one','two','one'], 'data1':np.random.randn(5), 'data2':np.random.randn(5)})
+
+df
+
+grouped = df['data1'].groupby(df['key1'])
+
+grouped
+
+grouped.mean()
+
+grouped.sum()
+
+grouped.count()
+
+
+means = df['data1'].groupby( [df['key1'], df['key2']] ).mean()
+
+means
+
+
+
+
