@@ -43,6 +43,6 @@ for page in range(1, 101):
 
         ws.append([blog_name, blog_address, post_title, post_date])
 
-path = '/Users/user/Desktop/'
+path = 'c:\\work\\'
 file_path = f'{path}{search_keyword}_blog_data.xlsx'
 wb.save(file_path)
