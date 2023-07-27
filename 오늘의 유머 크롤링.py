@@ -28,7 +28,7 @@ for n in range(0,10):
                         # print(title.strip())
                         # print(href.strip())
 
-                        if (re.search('아이패드', title)):
+                        if (re.search('한국', title)):
                                 print(title.strip())
                 except:
                         pass
