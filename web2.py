@@ -4,7 +4,7 @@ import requests
 #크롤링
 from bs4 import BeautifulSoup
 
-url = "https:///www.daangn.com/"
+url = "https://www.daangn.com/"
 response = requests.get(url)
 soup = BeautifulSoup(response.text, "html.parser")
 posts = soup.find_all("div",attrs={"class":"card-desc"})
@@ -21,6 +21,6 @@ for post in posts:
     addr = addr.text.replace("\n","")
 
     print("{0}, {1}, {2}".format(title, price, addr))
-    f.write(f("{title}, {price}, {addr}\n"))
+    f.write(f"{title}, {price}, {addr}\n")
 
 f.close()
