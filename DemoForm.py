@@ -20,4 +20,3 @@ if __name__ == "__main__":
     demoForm = DemoForm()
     demoForm.show()
     app.exec_()
-    
